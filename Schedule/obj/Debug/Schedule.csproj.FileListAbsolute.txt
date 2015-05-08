@@ -1,0 +1,8 @@
+D:\Development\Projects\Private\Schedule\Schedule\bin\Debug\Schedule.exe.config
+D:\Development\Projects\Private\Schedule\Schedule\bin\Debug\Schedule.exe
+D:\Development\Projects\Private\Schedule\Schedule\bin\Debug\Schedule.pdb
+D:\Development\Projects\Private\Schedule\Schedule\obj\Debug\Schedule.csprojResolveAssemblyReference.cache
+D:\Development\Projects\Private\Schedule\Schedule\obj\Debug\Schedule.Properties.Resources.resources
+D:\Development\Projects\Private\Schedule\Schedule\obj\Debug\Schedule.csproj.GenerateResource.Cache
+D:\Development\Projects\Private\Schedule\Schedule\obj\Debug\Schedule.exe
+D:\Development\Projects\Private\Schedule\Schedule\obj\Debug\Schedule.pdb
