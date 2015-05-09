@@ -1,13 +1,29 @@
-﻿
-namespace Schedule.Model
+﻿using System;
+
+namespace Schedule.Domain.Model
 {
+
+    public enum ConstraintDayOfWeek
+    {
+        Sunday,
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday
+    };
+
     public class TimeConstraint
     {
         private string _day;
         public string Day
         {
             get { return _day; }
-            set { _day = value; }
+            set
+            {
+                ConstraintDayOfWeek day;
+                if (Enum.TryParse(value, out day))
+                    _day = value;
+            }
         }
 
         private int _beginHour;
@@ -35,6 +51,13 @@ namespace Schedule.Model
         public TimeConstraint(string day, int begin, int end)
         {
             this.Day = day;
+            this.BeginHour = begin;
+            this.EndHour = end;
+        }
+
+        public TimeConstraint(ConstraintDayOfWeek day, int begin, int end)
+        {
+            this.Day = day.ToString();
             this.BeginHour = begin;
             this.EndHour = end;
         }

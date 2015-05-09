@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Schedule.Model
+namespace Schedule.Domain.Model
 {
     public class Lecturer
     {
@@ -37,29 +35,39 @@ namespace Schedule.Model
         /// <summary>
         /// Add constraint to the list
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="t">TimeConstraint</param>
         public void AddConstraint(TimeConstraint t)
         {
-            foreach (var item in Constraints)
+            var list = Constraints.Where(x => x.Day == t.Day);
+            if (list.Count() == 0)
+                Constraints.AddLast(t);
+            foreach (var item in Constraints.Where(x=>x.Day ==t.Day))
             {
-                
+
             }
+
+            Constraints = new LinkedList<TimeConstraint>(Constraints.OrderBy(x => ((int)Enum.Parse(typeof(ConstraintDayOfWeek), x.Day))));
         }
 
         /// <summary>
         /// Get list of constrains
         /// </summary>
-        /// <returns></returns>
         public LinkedList<TimeConstraint> GetConstraints()
         {
             return Constraints;
         }
 
+        /// <summary>
+        /// Get number of different days for all canstaints 
+        /// </summary>
         public int DifferentDays()
         {
             return Constraints.Select(x => x.Day).Distinct().Count();
         }
 
+        /// <summary>
+        /// Get total number of hours for all canstaints 
+        /// </summary>
         public int Hours()
         {
             int sum = 0;
