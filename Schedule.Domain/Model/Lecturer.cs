@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Schedule.Domain.Helpers;
 
 namespace Schedule.Domain.Model
 {
@@ -38,47 +39,27 @@ namespace Schedule.Domain.Model
         /// <param name="t">TimeConstraint</param>
         public void AddConstraint(TimeConstraint t)
         {
-            var list = Constraints.Where(x => x.Day == t.Day);
-            if (list.Count() == 0)
-                Constraints.AddLast(t);
-            else
-            {
-                var ll = new LinkedList<TimeConstraint>(list);
-                for (LinkedListNode<TimeConstraint> node = ll.First; node != null; node = node.Next)
-                {
-                    //Console.WriteLine(node.Value + " ");
-                    if (node.Value.Contains(t))
-                        continue;
-                    var tc = node.Value.Union(t);
-                    if (tc == null)
-                    {
-                        Constraints.AddLast(t);
-                        break;
-                    }
-                    else
-                    {
-                        Constraints.Remove(node.Value);
-                        Constraints.AddLast(tc);
-                    }
-                }
-
-                //foreach (var item in list.ToList())
-                //{
-                //    if (item.Contains(t))
-                //        continue;
-                //    var tc = item.Union(t);
-                //    if (tc == null)
-                //        Constraints.AddLast(t);
-                //    else
-                //    {
-                //        Constraints.Remove(item);
-                //        Constraints.AddLast(tc);
-                //    }
-                //}
-            }
-
-
+            // add and sort
+            Constraints.AddFirst(t);
             Constraints = new LinkedList<TimeConstraint>(Constraints.OrderBy(x => ((int)Enum.Parse(typeof(ConstraintDayOfWeek), x.Day))).ThenBy(x => x.BeginHour));
+
+            for (LinkedListNode<TimeConstraint> node = Constraints.First; node != null; node = node.Next)
+            {
+                if (!node.Value.Day.Equals(t.Day))          // different day
+                    continue;
+                var before = node.Previous;
+                if (before == null)                         // first node
+                    continue;
+
+                var tc = node.Value.Union(before.Value);   // try to merge nodes
+                if (tc != null)                            // merge succeded
+                {
+                    Constraints.AddAfter(before, tc);
+                    Constraints.Remove(node.Value);
+                    Constraints.Remove(before.Value);
+                    node = Constraints.First;
+                }
+            }
         }
 
         /// <summary>
@@ -105,9 +86,5 @@ namespace Schedule.Domain.Model
             return Constraints.Sum(x => x.Hours());
         }
 
-        public static void AddInOrder(this LinkedList<TimeConstraint> list, TimeConstraint item)
-        {
-            var before = list.FirstOrDefault(x => x.Day.Equals(item.Day) && x.BeginHour > item.BeginHour);
-        }
     }
 }

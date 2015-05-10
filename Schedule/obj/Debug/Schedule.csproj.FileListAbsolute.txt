@@ -13,4 +13,3 @@ d:\Development\Projects\Private\ScheduleJCE\Schedule\obj\Debug\Schedule.Properti
 d:\Development\Projects\Private\ScheduleJCE\Schedule\obj\Debug\Schedule.csproj.GenerateResource.Cache
 d:\Development\Projects\Private\ScheduleJCE\Schedule\obj\Debug\Schedule.exe
 d:\Development\Projects\Private\ScheduleJCE\Schedule\obj\Debug\Schedule.pdb
-d:\Development\Projects\Private\ScheduleJCE\Schedule\obj\Debug\Schedule.csprojResolveAssemblyReference.cache

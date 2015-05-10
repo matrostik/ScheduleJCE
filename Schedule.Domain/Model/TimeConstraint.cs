@@ -101,16 +101,10 @@ namespace Schedule.Domain.Model
             if (other.EndHour < this.BeginHour)
                 return null;
             // get begin and end hours
-            int start = this.BeginHour >= other.BeginHour ? this.BeginHour : other.BeginHour;
+            int start = this.BeginHour <= other.BeginHour ? this.BeginHour : other.BeginHour;
             int end = this.EndHour >= other.EndHour ? this.EndHour : other.EndHour;
 
             return new TimeConstraint(this.Day, start, end);
-        }
-
-        public bool Overlaps()
-        {
-
-            return false;
         }
 
         /// <summary>
