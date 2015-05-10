@@ -41,12 +41,44 @@ namespace Schedule.Domain.Model
             var list = Constraints.Where(x => x.Day == t.Day);
             if (list.Count() == 0)
                 Constraints.AddLast(t);
-            foreach (var item in Constraints.Where(x=>x.Day ==t.Day))
+            else
             {
+                var ll = new LinkedList<TimeConstraint>(list);
+                for (LinkedListNode<TimeConstraint> node = ll.First; node != null; node = node.Next)
+                {
+                    //Console.WriteLine(node.Value + " ");
+                    if (node.Value.Contains(t))
+                        continue;
+                    var tc = node.Value.Union(t);
+                    if (tc == null)
+                    {
+                        Constraints.AddLast(t);
+                        break;
+                    }
+                    else
+                    {
+                        Constraints.Remove(node.Value);
+                        Constraints.AddLast(tc);
+                    }
+                }
 
+                //foreach (var item in list.ToList())
+                //{
+                //    if (item.Contains(t))
+                //        continue;
+                //    var tc = item.Union(t);
+                //    if (tc == null)
+                //        Constraints.AddLast(t);
+                //    else
+                //    {
+                //        Constraints.Remove(item);
+                //        Constraints.AddLast(tc);
+                //    }
+                //}
             }
 
-            Constraints = new LinkedList<TimeConstraint>(Constraints.OrderBy(x => ((int)Enum.Parse(typeof(ConstraintDayOfWeek), x.Day))));
+
+            Constraints = new LinkedList<TimeConstraint>(Constraints.OrderBy(x => ((int)Enum.Parse(typeof(ConstraintDayOfWeek), x.Day))).ThenBy(x => x.BeginHour));
         }
 
         /// <summary>
@@ -70,10 +102,12 @@ namespace Schedule.Domain.Model
         /// </summary>
         public int Hours()
         {
-            int sum = 0;
-            foreach (var item in Constraints)
-                sum += item.Hours();
-            return sum;
+            return Constraints.Sum(x => x.Hours());
+        }
+
+        public static void AddInOrder(this LinkedList<TimeConstraint> list, TimeConstraint item)
+        {
+            var before = list.FirstOrDefault(x => x.Day.Equals(item.Day) && x.BeginHour > item.BeginHour);
         }
     }
 }

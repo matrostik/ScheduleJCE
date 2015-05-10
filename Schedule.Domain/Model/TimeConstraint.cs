@@ -67,7 +67,7 @@ namespace Schedule.Domain.Model
         /// </summary>
         public int Hours()
         {
-            return _beginHour - _endHour;
+            return this.EndHour - this.BeginHour;
         }
 
         /// <summary>
@@ -80,9 +80,9 @@ namespace Schedule.Domain.Model
             if (!this.Day.Equals(other.Day))
                 return false;
             // this start later or end befor other
-            if (this.BeginHour < other.BeginHour || this.EndHour > other.EndHour)
-                return false;
-            return true;
+            if (this.BeginHour >= other.BeginHour && this.EndHour >= other.EndHour)
+                return true;
+            return false;
         }
 
         /// <summary>
@@ -95,10 +95,10 @@ namespace Schedule.Domain.Model
             if (!this.Day.Equals(other.Day))
                 return null;
             // this ends before other
-            if (this.BeginHour >= other.BeginHour && this.EndHour <= other.EndHour)
+            if (this.EndHour < other.BeginHour)
                 return null;
             // other ends before this
-            if (other.BeginHour >= this.BeginHour && other.EndHour <= this.EndHour)
+            if (other.EndHour < this.BeginHour)
                 return null;
             // get begin and end hours
             int start = this.BeginHour >= other.BeginHour ? this.BeginHour : other.BeginHour;
