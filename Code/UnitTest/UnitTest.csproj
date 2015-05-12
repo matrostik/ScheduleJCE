@@ -54,9 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Schedule\Schedule.csproj">
-      <Project>{96ed3204-cb11-4b6c-9e74-d86a235ac464}</Project>
-      <Name>Schedule</Name>
+    <ProjectReference Include="..\Schedule.Domain\Schedule.Domain.csproj">
+      <Project>{174fd8c8-823c-4aab-a581-9c6064d2beaa}</Project>
+      <Name>Schedule.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
