@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Model\Lecturer.cs" />
+    <Compile Include="Model\Staff.cs" />
     <Compile Include="Model\TimeConstraint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
