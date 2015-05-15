@@ -5,6 +5,7 @@ namespace Schedule.Domain.Model
 {
     public class Staff
     {
+        // properties
         private LinkedList<Lecturer> _lecturers;
         public LinkedList<Lecturer> Lecturers
         {
@@ -12,6 +13,7 @@ namespace Schedule.Domain.Model
             set { _lecturers = value; }
         }
 
+        // ctors
         public Staff()
         {
             _lecturers = new LinkedList<Lecturer>();
@@ -44,7 +46,22 @@ namespace Schedule.Domain.Model
             {
                 lecturer.AddConstraint(item);
             }
+        }
 
+        /// <summary>
+        /// Add new lecturer
+        /// </summary>
+        /// <param name="first">First name</param>
+        /// <param name="second">Last name</param>
+        public void AddLecturer(string first, string last)
+        {
+            var lecturer = new Lecturer(first, last);
+            this._lecturers.AddLast(lecturer);
+        }
+
+        public void AddLecturer(Lecturer lecturer)
+        {
+            this._lecturers.AddLast(lecturer);
         }
     }
 }
