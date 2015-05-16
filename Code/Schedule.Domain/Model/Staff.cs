@@ -42,6 +42,7 @@ namespace Schedule.Domain.Model
             var lecturer = _lecturers.FirstOrDefault(l => l.FirstName.Equals(first) && l.LastName.Equals(second));
             if (lecturer == null)
                 return;
+            lecturer.RemoveConstraints();
             foreach (var item in list)
             {
                 lecturer.AddConstraint(item);

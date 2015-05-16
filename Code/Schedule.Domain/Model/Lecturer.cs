@@ -71,6 +71,14 @@ namespace Schedule.Domain.Model
         }
 
         /// <summary>
+        /// Remove all constraints 
+        /// </summary>
+        public void RemoveConstraints()
+        {
+            Constraints.Clear();
+        }
+
+        /// <summary>
         /// Get number of different days for all canstaints 
         /// </summary>
         public int DifferentDays()
