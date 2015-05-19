@@ -5,7 +5,7 @@ namespace Schedule.Domain.Model
 
     public enum ConstraintDayOfWeek
     {
-        Sunday =1,
+        Sunday = 0,
         Monday,
         Tuesday,
         Wednesday,

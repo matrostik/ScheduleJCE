@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Schedule.Domain.Model
@@ -27,7 +28,7 @@ namespace Schedule.Domain.Model
         /// <returns></returns>
         public LinkedList<TimeConstraint> GetConstraints(string first, string last)
         {
-            var lecturer = _lecturers.FirstOrDefault(l => l.FirstName.Equals(first) && l.LastName.Equals(last));
+            var lecturer = _lecturers.FirstOrDefault(l => l.FirstName.Equals(first, StringComparison.OrdinalIgnoreCase) && l.LastName.Equals(last,StringComparison.OrdinalIgnoreCase));
             return lecturer != null ? lecturer.Constraints : null;
         }
 

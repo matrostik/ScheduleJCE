@@ -15,17 +15,18 @@ namespace Schedule
     {
 
         public Staff Staff { get; set; }
-
+        List<DataGridViewCell> SelectedCells { get; set; }
 
         public Schedule()
         {
             InitializeComponent();
-            gridData.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
             // init properties
             btnSubmit.Enabled = false;
             this.Staff = new Staff();
+            SelectedCells = new List<DataGridViewCell>();
             BuildGrid();
+
 
             Lecturer l1 = new Lecturer("Bruce", "Lee");
             Staff.AddLecturer(l1);
@@ -37,11 +38,15 @@ namespace Schedule
 
         private void BuildGrid()
         {
+            gridData.Rows.Clear();
+            gridData.Rows.Add(12);
             for (int i = 8; i < 20; i++)
             {
                 var time = string.Format("{0}:00-{1}:00", i, i + 1);
-                gridData.Rows.Add(time);
+                gridData.Rows[i - 8].HeaderCell.Value = time;
             }
+            // disable initial selection
+            gridData.Rows[0].Cells[0].Selected = false;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -58,14 +63,32 @@ namespace Schedule
                 var list = this.Staff.GetConstraints(first, last);
                 if (list == null)
                 {
-                    MessageBox.Show("Lecturer not exist", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var result = MessageBox.Show("Lecturer not exist, do you want to create new with this information?", "Not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                    if(result== DialogResult.OK) // create new lecture
+                        Staff.AddLecturer(new Lecturer(first, last));
+                    // reset inputs
                     txtFirstName.Text = txtLastName.Text = string.Empty;
                     return;
                 }
                 ToggleControls();
                 lblTitle.Text = string.Format("{0} {1}'s Schedule", first, last);
+                SelectedCells.Clear();                
                 FillGrid(list);
+                gridData.Visible = true;
             }
+        }
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            LinkedList<TimeConstraint> list = new LinkedList<TimeConstraint>();
+            foreach (DataGridViewTextBoxCell item in SelectedCells)
+            {
+                list.AddLast(new TimeConstraint((ConstraintDayOfWeek)item.ColumnIndex, item.RowIndex + 8, item.RowIndex + 9));
+            }
+            Staff.AddConstraints(txtFirstName.Text, txtLastName.Text, list);
+            ToggleControls();
+            txtFirstName.Text = txtLastName.Text = string.Empty;
+            BuildGrid();
         }
 
         private void FillGrid(LinkedList<TimeConstraint> list)
@@ -76,10 +99,11 @@ namespace Schedule
                 var diff = tc.EndHour - tc.BeginHour;
                 for (int i = 0; i < diff; i++)
                 {
-                    gridData.Rows[tc.BeginHour + i - 8].Cells[column].Selected = true;
+                    DataGridViewCell row = gridData.Rows[tc.BeginHour + i - 8].Cells[column];
+                    row.Style.BackColor = Color.DarkRed;
+                    SelectedCells.Add(row);
                 }
             }
-
         }
 
         private void ToggleControls()
@@ -88,51 +112,26 @@ namespace Schedule
             gridData.Enabled = btnSubmit.Enabled = !btnSubmit.Enabled;
             gridData.ClearSelection();
             lblTitle.Text = string.Empty;
+            gridData.Visible = !gridData.Visible;
         }
-
-        private void gridData_CellStateChanged(object sender, DataGridViewCellStateChangedEventArgs e)
-        {
-            //as event caused by 'unselectable' will select it again
-            if (e.Cell.ColumnIndex == 0)
-            {
-                e.Cell.Selected = false;
-                return;
-            }
-            //selectionChanged = true;
-            //e.Cell.Style.BackColor = Color.Red;
-        }
-
-        //private bool selectionChanged;
 
         private void gridData_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //gridData.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
-
-            //if (!selectionChanged)
-            //{
-            //    gridData.ClearSelection();
-            //    selectionChanged = true;
-            //    gridData.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
-            //}
-            //else
-            //{
-            //    selectionChanged = false;
-            //}
-        }
-
-        private void btnSubmit_Click(object sender, EventArgs e)
-        {
-            LinkedList<TimeConstraint> list = new LinkedList<TimeConstraint>();
-            foreach (DataGridViewTextBoxCell item in gridData.SelectedCells)
+            if (e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+            if (SelectedCells.Contains(gridData.CurrentCell))
             {
-                list.AddLast(new TimeConstraint((ConstraintDayOfWeek)item.ColumnIndex, item.RowIndex + 8, item.RowIndex + 9));
+                SelectedCells.Remove(gridData.CurrentCell);
+                gridData.CurrentCell.Style.BackColor = Color.WhiteSmoke;
+                gridData.CurrentCell.Selected = false;
+            }
+            else
+            {
+                SelectedCells.Add(gridData.CurrentCell);
+                gridData.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.DarkRed;
 
             }
-            Staff.AddConstraints(txtFirstName.Text, txtLastName.Text, list);
-            ToggleControls();
-            txtFirstName.Text = txtLastName.Text = string.Empty;
         }
-
 
     }
 }
