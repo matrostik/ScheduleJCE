@@ -1,12 +1,8 @@
 ﻿using Schedule.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Schedule
@@ -27,7 +23,7 @@ namespace Schedule
             SelectedCells = new List<DataGridViewCell>();
             BuildGrid();
 
-
+            // sample data
             Lecturer l1 = new Lecturer("Bruce", "Lee");
             Staff.AddLecturer(l1);
             Lecturer l2 = new Lecturer("Ros", "Ha");
@@ -36,6 +32,9 @@ namespace Schedule
             Staff.AddLecturer(l2);
         }
 
+        /// <summary>
+        /// Build rows headers
+        /// </summary>
         private void BuildGrid()
         {
             gridData.Rows.Clear();
@@ -49,6 +48,10 @@ namespace Schedule
             gridData.Rows[0].Cells[0].Selected = false;
         }
 
+        /// <summary>
+        /// Gets the lecture and it constrains
+        /// Creates new one if not found
+        /// </summary>
         private void btnOK_Click(object sender, EventArgs e)
         {
             var first = txtFirstName.Text;
@@ -64,7 +67,7 @@ namespace Schedule
                 if (list == null)
                 {
                     var result = MessageBox.Show("Lecturer not exist, do you want to create new with this information?", "Not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                    if(result== DialogResult.OK) // create new lecture
+                    if (result == DialogResult.OK) // create new lecture
                         Staff.AddLecturer(new Lecturer(first, last));
                     // reset inputs
                     txtFirstName.Text = txtLastName.Text = string.Empty;
@@ -72,12 +75,15 @@ namespace Schedule
                 }
                 ToggleControls();
                 lblTitle.Text = string.Format("{0} {1}'s Schedule", first, last);
-                SelectedCells.Clear();                
+                SelectedCells.Clear();
                 FillGrid(list);
                 gridData.Visible = true;
             }
         }
 
+        /// <summary>
+        /// Save selected constraints
+        /// </summary>
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             LinkedList<TimeConstraint> list = new LinkedList<TimeConstraint>();
@@ -91,6 +97,10 @@ namespace Schedule
             BuildGrid();
         }
 
+        /// <summary>
+        /// Fill data grid with existing constrains
+        /// </summary>
+        /// <param name="list">LinkedList<TimeConstraint></param>
         private void FillGrid(LinkedList<TimeConstraint> list)
         {
             foreach (var tc in list)
@@ -106,6 +116,9 @@ namespace Schedule
             }
         }
 
+        /// <summary>
+        /// Toggle controls values
+        /// </summary>
         private void ToggleControls()
         {
             txtFirstName.Enabled = txtLastName.Enabled = btnOK.Enabled = !btnOK.Enabled;
@@ -115,21 +128,25 @@ namespace Schedule
             gridData.Visible = !gridData.Visible;
         }
 
-        private void gridData_CellClick(object sender, DataGridViewCellEventArgs e)
+        /// <summary>
+        /// Selection finished, marks selected cells and store them to the list
+        /// </summary>
+        private void gridData_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.ColumnIndex < 0 || e.RowIndex < 0)
-                return;
-            if (SelectedCells.Contains(gridData.CurrentCell))
+            Debug.WriteLine(gridData.SelectedCells.Count);
+            foreach (DataGridViewCell item in gridData.SelectedCells)
             {
-                SelectedCells.Remove(gridData.CurrentCell);
-                gridData.CurrentCell.Style.BackColor = Color.WhiteSmoke;
-                gridData.CurrentCell.Selected = false;
-            }
-            else
-            {
-                SelectedCells.Add(gridData.CurrentCell);
-                gridData.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.DarkRed;
-
+                if (gridData.SelectedCells.Count == 1 && SelectedCells.Contains(item))
+                {
+                    SelectedCells.Remove(item);
+                    item.Style.BackColor = Color.WhiteSmoke;
+                    item.Selected = false;
+                }
+                else
+                {
+                    SelectedCells.Add(item);
+                    item.Style.BackColor = Color.DarkRed;
+                }
             }
         }
 

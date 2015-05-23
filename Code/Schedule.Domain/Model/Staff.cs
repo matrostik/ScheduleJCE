@@ -25,7 +25,6 @@ namespace Schedule.Domain.Model
         /// </summary>
         /// <param name="first">First name</param>
         /// <param name="last">Last name</param>
-        /// <returns></returns>
         public LinkedList<TimeConstraint> GetConstraints(string first, string last)
         {
             var lecturer = _lecturers.FirstOrDefault(l => l.FirstName.Equals(first, StringComparison.OrdinalIgnoreCase) && l.LastName.Equals(last,StringComparison.OrdinalIgnoreCase));
@@ -61,6 +60,10 @@ namespace Schedule.Domain.Model
             this._lecturers.AddLast(lecturer);
         }
 
+        /// <summary>
+        /// Add new lecturer
+        /// </summary>
+        /// <param name="lecturer">Lecturer</param>
         public void AddLecturer(Lecturer lecturer)
         {
             this._lecturers.AddLast(lecturer);

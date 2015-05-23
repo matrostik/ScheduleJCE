@@ -153,7 +153,6 @@
             this.gridData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridData.Location = new System.Drawing.Point(0, 125);
             this.gridData.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-            this.gridData.MultiSelect = false;
             this.gridData.Name = "gridData";
             this.gridData.ReadOnly = true;
             this.gridData.RowHeadersWidth = 100;
@@ -162,7 +161,7 @@
             this.gridData.Size = new System.Drawing.Size(734, 386);
             this.gridData.TabIndex = 2;
             this.gridData.Visible = false;
-            this.gridData.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridData_CellClick);
+            this.gridData.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridData_MouseUp);
             // 
             // Column1
             // 
