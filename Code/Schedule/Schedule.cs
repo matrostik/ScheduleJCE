@@ -68,10 +68,16 @@ namespace Schedule
                 {
                     var result = MessageBox.Show("Lecturer not exist, do you want to create new with this information?", "Not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                     if (result == DialogResult.OK) // create new lecture
+                    {
                         Staff.AddLecturer(new Lecturer(first, last));
-                    // reset inputs
-                    txtFirstName.Text = txtLastName.Text = string.Empty;
-                    return;
+                        list = this.Staff.GetConstraints(first, last);
+                    }
+                    else
+                    {
+                        // reset inputs
+                        txtFirstName.Text = txtLastName.Text = string.Empty;
+                        return;
+                    }
                 }
                 ToggleControls();
                 lblTitle.Text = string.Format("{0} {1}'s Schedule", first, last);
