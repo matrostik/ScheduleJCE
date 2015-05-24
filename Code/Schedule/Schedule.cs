@@ -142,7 +142,7 @@ namespace Schedule
             Debug.WriteLine(gridData.SelectedCells.Count);
             foreach (DataGridViewCell item in gridData.SelectedCells)
             {
-                if (gridData.SelectedCells.Count == 1 && SelectedCells.Contains(item))
+                if (SelectedCells.Contains(item))
                 {
                     SelectedCells.Remove(item);
                     item.Style.BackColor = Color.WhiteSmoke;
